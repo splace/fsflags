@@ -4,7 +4,7 @@ import "os"
 
 // flag value for an existing directory.
 type DirValue struct{
-    fileValue
+    FileValue
 }
 
 func (fsf *DirValue) Set(v string) error {
@@ -19,7 +19,7 @@ func (fsf *DirValue) Set(v string) error {
 
 // flag value for an existing directory, creates if needed.
 type NewDirValue struct{
-    fileValue
+    FileValue
 }
 
 func (fsf *NewDirValue) Set(v string) (err error) {
@@ -41,7 +41,7 @@ func (fsf *NewDirValue) Set(v string) (err error) {
 
 // flag value for a directory, creates if needed, any pre-existing hierarchy inside it is erased.
 type NewOverwriteDirValue struct{
-    fileValue
+    FileValue
 }
 
 func (fsf *NewOverwriteDirValue) Set(v string) (err error) {
@@ -65,7 +65,7 @@ func (fsf *NewOverwriteDirValue) Set(v string) (err error) {
 
 // flag value for a directory, pre-existing, emptied.
 type OverwriteDirValue struct{
-    fileValue
+    FileValue
 }
 
 func (fsf *OverwriteDirValue) Set(v string) (err error) {
@@ -82,7 +82,7 @@ func (fsf *OverwriteDirValue) Set(v string) (err error) {
 
 // flag value for a directory, creates if needed, any pre-existing files inside it are erased, (but not directories).
 type NewOverwriteFilesDirValue struct{
-    fileValue
+    FileValue
 }
 
 func (fsf *NewOverwriteFilesDirValue) Set(v string) (err error) {
@@ -106,7 +106,7 @@ func (fsf *NewOverwriteFilesDirValue) Set(v string) (err error) {
 
 // flag value for a directory, pre-existing, any pre-existing files inside it are erased, (but not directories).
 type OverwriteFilesDirValue struct{
-    fileValue
+    FileValue
 }
 
 func (fsf *OverwriteFilesDirValue) Set(v string) (err error) {
@@ -124,7 +124,7 @@ func (fsf *OverwriteFilesDirValue) Set(v string) (err error) {
 
 // flag value for a directory, creates if needed, any pre-existing directories inside it are erased, (but not files).
 type NewOverwriteSubdirsDirValue struct{
-    fileValue
+    FileValue
 }
 
 func (fsf *NewOverwriteSubdirsDirValue) Set(v string) (err error) {
@@ -148,7 +148,7 @@ func (fsf *NewOverwriteSubdirsDirValue) Set(v string) (err error) {
 
 // flag value for a directory, pre-existing, any pre-existing directories inside it are erased, (but not files).
 type OverwriteSubdirsDirValue struct{
-    fileValue
+    FileValue
 }
 
 func (fsf *OverwriteSubdirsDirValue) Set(v string) (err error) {
@@ -165,7 +165,7 @@ func (fsf *OverwriteSubdirsDirValue) Set(v string) (err error) {
 
 // flag value for a directory, not pre-existing.
 type MakeDirValue struct{
-    fileValue
+    FileValue
 }
 
 func (fsf *MakeDirValue) Set(v string) (err error) {
@@ -177,7 +177,7 @@ func (fsf *MakeDirValue) Set(v string) (err error) {
 
 // flag value for a directory, not pre-existing, possibly multiple levels down.
 type MakeDirAllValue struct{
-    fileValue
+    FileValue
 }
 
 func (fsf *MakeDirAllValue) Set(v string) (err error) {
@@ -189,7 +189,7 @@ func (fsf *MakeDirAllValue) Set(v string) (err error) {
 
 // flag value for a directory, possibly down multiple levels. if pre-existing erased.
 type MakeDirOverwriteAllValue struct{
-    fileValue
+    FileValue
 }
 
 func (fsf *MakeDirOverwriteAllValue) Set(v string) (err error) {
@@ -202,7 +202,7 @@ func (fsf *MakeDirOverwriteAllValue) Set(v string) (err error) {
 
 // flag value for a new directory at this level. if pre-existing erased.
 type MakeDirOverwriteValue struct{
-    fileValue
+    FileValue
 }
 
 func (fsf *MakeDirOverwriteValue) Set(v string) (err error) {
