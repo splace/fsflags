@@ -18,7 +18,7 @@ import "log"
 import "path/filepath"
 
 func main(){
-	var logFolder fsflags.newDirValue   // create or reuse folder, emptying it on startup.
+	var logFolder fsflags.NewDirValue   // create or reuse folder, emptying it on startup.
 	flag.Var(&logFolder, "f", "folder for log files.")
 	flag.Parse()
 
