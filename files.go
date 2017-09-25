@@ -3,27 +3,27 @@ package fsflags
 import "os"
 
 // flag value for existing file
-type fileValue struct{
+type FileValue struct{
     *os.File
 }
 
-func (fsf *fileValue) Set(v string) (err error) {
+func (fsf *FileValue) Set(v string) (err error) {
     fsf.File,err=os.Open(v)
     return
 }
 
-func (fsf *fileValue) String() string {
+func (fsf *FileValue) String() string {
     if fsf==nil || fsf.File==nil {return "<nil>"}
     return fsf.File.Name()
 }
 
 
 // flag value for file, creates if needed.
-type createFileValue struct{
+type CreateFileValue struct{
     fileValue
 }
 
-func (fsf *createFileValue) Set(v string) (err error) {
+func (fsf *CreateFileValue) Set(v string) (err error) {
 	fsf.File,err=os.Create(v)
 	return
 }

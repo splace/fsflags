@@ -3,11 +3,11 @@ package fsflags
 import "os"
 
 // flag value for an existing directory.
-type dirValue struct{
+type DirValue struct{
     fileValue
 }
 
-func (fsf *dirValue) Set(v string) error {
+func (fsf *DirValue) Set(v string) error {
 	f,err:=os.Open(v)
     if err!=nil{ return err}
     fi,err:=f.Stat()
@@ -18,11 +18,11 @@ func (fsf *dirValue) Set(v string) error {
 }
 
 // flag value for an existing directory, creates if needed.
-type newDirValue struct{
+type NewDirValue struct{
     fileValue
 }
 
-func (fsf *newDirValue) Set(v string) (err error) {
+func (fsf *NewDirValue) Set(v string) (err error) {
 	f,err:=os.Open(v)
 	if os.IsNotExist(err){
 		err=os.Mkdir(v,0777)
@@ -40,11 +40,11 @@ func (fsf *newDirValue) Set(v string) (err error) {
 }
 
 // flag value for a directory, creates if needed, any pre-existing hierarchy inside it is erased.
-type newOverwriteDirValue struct{
+type NewOverwriteDirValue struct{
     fileValue
 }
 
-func (fsf *newOverwriteDirValue) Set(v string) (err error) {
+func (fsf *NewOverwriteDirValue) Set(v string) (err error) {
 	f,err:=os.Open(v)
 	if os.IsNotExist(err){
 		err=os.Mkdir(v,0777)
@@ -57,35 +57,35 @@ func (fsf *newOverwriteDirValue) Set(v string) (err error) {
     fi,err:=f.Stat()
     if err!=nil{ return}
 	if !fi.IsDir(){return os.ErrNotExist}
-	err=RemoveContents(f)
+	err=removeContents(f)
     if err!=nil{ return}
     fsf.File=f
     return
 }
 
 // flag value for a directory, pre-existing, emptied.
-type overwriteDirValue struct{
+type OverwriteDirValue struct{
     fileValue
 }
 
-func (fsf *overwriteDirValue) Set(v string) (err error) {
+func (fsf *OverwriteDirValue) Set(v string) (err error) {
 	f,err:=os.Open(v)
     if err!=nil{ return}
     fi,err:=f.Stat()
     if err!=nil{ return}
 	if !fi.IsDir(){return os.ErrNotExist}
-	err=RemoveContents(f)
+	err=removeContents(f)
     if err!=nil{ return}
     fsf.File=f
     return
 }
 
 // flag value for a directory, creates if needed, any pre-existing files inside it are erased, (but not directories).
-type newOverwriteFilesDirValue struct{
+type NewOverwriteFilesDirValue struct{
     fileValue
 }
 
-func (fsf *newOverwriteFilesDirValue) Set(v string) (err error) {
+func (fsf *NewOverwriteFilesDirValue) Set(v string) (err error) {
 	f,err:=os.Open(v)
 	if os.IsNotExist(err){
 		err=os.Mkdir(v,0777)
@@ -98,24 +98,24 @@ func (fsf *newOverwriteFilesDirValue) Set(v string) (err error) {
     fi,err:=f.Stat()
     if err!=nil{ return}
 	if !fi.IsDir(){return os.ErrNotExist}
-	err=RemoveFileContents(f)
+	err=removeFileContents(f)
     if err!=nil{ return}
     fsf.File=f
     return
 }
 
 // flag value for a directory, pre-existing, any pre-existing files inside it are erased, (but not directories).
-type overwriteFilesDirValue struct{
+type OverwriteFilesDirValue struct{
     fileValue
 }
 
-func (fsf *overwriteFilesDirValue) Set(v string) (err error) {
+func (fsf *OverwriteFilesDirValue) Set(v string) (err error) {
 	f,err:=os.Open(v)
     if err!=nil{ return}
     fi,err:=f.Stat()
     if err!=nil{ return}
 	if !fi.IsDir(){return os.ErrNotExist}
-	err=RemoveFileContents(f)
+	err=removeFileContents(f)
     if err!=nil{ return}
     fsf.File=f
     return
@@ -123,11 +123,11 @@ func (fsf *overwriteFilesDirValue) Set(v string) (err error) {
 
 
 // flag value for a directory, creates if needed, any pre-existing directories inside it are erased, (but not files).
-type newOverwriteSubdirsDirValue struct{
+type NewOverwriteSubdirsDirValue struct{
     fileValue
 }
 
-func (fsf *newOverwriteSubdirsDirValue) Set(v string) (err error) {
+func (fsf *NewOverwriteSubdirsDirValue) Set(v string) (err error) {
 	f,err:=os.Open(v)
 	if os.IsNotExist(err){
 		err=os.Mkdir(v,0777)
@@ -140,35 +140,35 @@ func (fsf *newOverwriteSubdirsDirValue) Set(v string) (err error) {
     fi,err:=f.Stat()
     if err!=nil{ return}
 	if !fi.IsDir(){return os.ErrNotExist}
-	err=RemoveDirContents(f)
+	err=removeDirContents(f)
     if err!=nil{ return}
     fsf.File=f
     return
 }
 
 // flag value for a directory, pre-existing, any pre-existing directories inside it are erased, (but not files).
-type overwriteSubdirsDirValue struct{
+type OverwriteSubdirsDirValue struct{
     fileValue
 }
 
-func (fsf *overwriteSubdirsDirValue) Set(v string) (err error) {
+func (fsf *OverwriteSubdirsDirValue) Set(v string) (err error) {
 	f,err:=os.Open(v)
     if err!=nil{ return}
     fi,err:=f.Stat()
     if err!=nil{ return}
 	if !fi.IsDir(){return os.ErrNotExist}
-	err=RemoveDirContents(f)
+	err=removeDirContents(f)
     if err!=nil{ return}
     fsf.File=f
     return
 }
 
 // flag value for a directory, not pre-existing.
-type makeDirValue struct{
+type MakeDirValue struct{
     fileValue
 }
 
-func (fsf *makeDirValue) Set(v string) (err error) {
+func (fsf *MakeDirValue) Set(v string) (err error) {
 	err=os.Mkdir(v,0777)
     if err!=nil{ return}
     fsf.File,err=os.Open(v)
@@ -176,11 +176,11 @@ func (fsf *makeDirValue) Set(v string) (err error) {
 }
 
 // flag value for a directory, not pre-existing, possibly multiple levels down.
-type makeDirAllValue struct{
+type MakeDirAllValue struct{
     fileValue
 }
 
-func (fsf *makeDirAllValue) Set(v string) (err error) {
+func (fsf *MakeDirAllValue) Set(v string) (err error) {
 	err=os.MkdirAll(v,0777)
     if err!=nil{ return}
     fsf.File,err=os.Open(v)
@@ -188,11 +188,11 @@ func (fsf *makeDirAllValue) Set(v string) (err error) {
 }
 
 // flag value for a directory, possibly down multiple levels. if pre-existing erased.
-type makeDirOverwriteAllValue struct{
+type MakeDirOverwriteAllValue struct{
     fileValue
 }
 
-func (fsf *makeDirOverwriteAllValue) Set(v string) (err error) {
+func (fsf *MakeDirOverwriteAllValue) Set(v string) (err error) {
 	err=os.RemoveAll(v)
     if err!=nil{ return}
 	err=os.MkdirAll(v,0777)
@@ -201,11 +201,11 @@ func (fsf *makeDirOverwriteAllValue) Set(v string) (err error) {
 }
 
 // flag value for a new directory at this level. if pre-existing erased.
-type makeDirOverwriteValue struct{
+type MakeDirOverwriteValue struct{
     fileValue
 }
 
-func (fsf *makeDirOverwriteValue) Set(v string) (err error) {
+func (fsf *MakeDirOverwriteValue) Set(v string) (err error) {
 	err=os.RemoveAll(v)
     if err!=nil{ return}
 	err=os.Mkdir(v,0777)
@@ -213,7 +213,7 @@ func (fsf *makeDirOverwriteValue) Set(v string) (err error) {
    return
 }
 
-func RemoveContents(d *os.File) error {
+func removeContents(d *os.File) error {
 	finfos, err := d.Readdir(-1)
     if err != nil {
         return err
@@ -232,7 +232,7 @@ func RemoveContents(d *os.File) error {
     return nil
 }
 
-func RemoveFileContents(d *os.File) error {
+func removeFileContents(d *os.File) error {
 	finfos, err := d.Readdir(-1)
     if err != nil {
         return err
@@ -249,7 +249,7 @@ func RemoveFileContents(d *os.File) error {
     return nil
 }
 
-func RemoveDirContents(d *os.File) error {
+func removeDirContents(d *os.File) error {
 	finfos, err := d.Readdir(-1)
     if err != nil {
         return err
