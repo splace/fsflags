@@ -20,7 +20,7 @@ func (fsf *FileValue) String() string {
 
 // flag value for file, creates if needed.
 type CreateFileValue struct{
-    fileValue
+    FileValue
 }
 
 func (fsf *CreateFileValue) Set(v string) (err error) {
