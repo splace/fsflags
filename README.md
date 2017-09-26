@@ -22,15 +22,16 @@ func main(){
 	flag.Var(&logFolder, "f", "folder for log files.")
 	flag.Parse()
 
+	var progressLog, errorLog *log.Logger
 	if logFolder.File == nil {
 		progressLog=log.New(os.Stdout, "", log.LstdFlags)
 		errorLog=log.New(os.Stderr, "", log.LstdFlags)
 	}else{
-		progressLogFile,err:=os.Create(filepath.Join(logFolder,"progress.log"))
-		if err!=nil{log.Printf(err)}
+		progressLogFile,err:=os.Create(filepath.Join(logFolder.File.Name(),"progress.log"))
+		if err!=nil{log.Print(err)}
 		progressLog=log.New(progressLogFile, "", log.LstdFlags)
-		errorLogFile,err:=os.OpenFile(filepath.Join(logFolder,"errors.log"), os.O_APPEND|os.O_CREATE|os.O_WRONLY, 0644)
-		if err!=nil{log.Printf(err)}
+		errorLogFile,err:=os.OpenFile(filepath.Join(logFolder.File.Name(),"errors.log"), os.O_APPEND|os.O_CREATE|os.O_WRONLY, 0644)
+		if err!=nil{log.Print(err)}
  		errorLog=log.New(errorLogFile, "", log.LstdFlags)
 	}
 	
