@@ -60,7 +60,7 @@ func (fsf *AppendFileValue) Set(v string) (err error) {
 
 // flag value for a file, creates in given dir (also created if needed) new each day, appended too if pre-exists.
 // same file for each invocation, to maintain strict daily log will need re-making after midnight.
-// used for logging dont need date, so could use flag:LTime in the log standard package
+// if used for logging dont need date, so could use flag:LTime in the log standard package
 type DailyFileValue struct{
     FileValue
 }
@@ -84,8 +84,8 @@ func (fsf *DailyFileValue) Set(v string) (err error) {
 
 // flag value for a file, creates in given dir (also created if needed) new each day, appended too if pre-exists.
 // same file for each invocation, to maintain strict daily log will need re-making after midnight.
-// erases up to two files (oldest)) to maintain at least required number of files.
-// used for logging dont need date, so could use flag:LTime in the log standard package
+// can erase the oldest file to maintain at least required number of files.
+// if used for logging dont need date, so could use flag:LTime in the log standard package
 type DailyErasingFileValue struct{
     DailyFileValue
     Required int 
@@ -94,17 +94,16 @@ type DailyErasingFileValue struct{
 func (fsf *DailyErasingFileValue) Set(v string) (err error) {
 	err=fsf.DailyFileValue.Set(v)
 	if err==nil{
+		// v is a folder and .File has been created
 	     files, derr := ioutil.ReadDir(v)
-     	if derr!=nil || len(files)<fsf.Required+2 { return}
+     	if derr!=nil || len(files)<fsf.Required+3 { return}  // makes sure can't erase just created file
     	  oldestTime := time.Now()
-    	  var oldestFile,secondoldestFile os.FileInfo
+    	  var oldestFile os.FileInfo
 		for _, file := range files {
-              if file.Mode().IsRegular() && file.ModTime().Before(oldestTime) {
-                      secondoldestFile = oldestFile
+              if file.Name()!= fsf.File.Name() && file.Mode().IsRegular() && file.ModTime().Before(oldestTime) {
                       oldestFile = file
                       oldestTime = file.ModTime()
               }
-         if secondoldestFile!=nil{os.Remove(v+"/"+secondoldestFile.Name())}
          if oldestFile!=nil{os.Remove(v+"/"+oldestFile.Name())}
       }
 
