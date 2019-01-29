@@ -2,6 +2,7 @@ package fsflags
 
 import "os"
 import "fmt"
+import "time"
 
 // flag value for existing file, error if it doesn't
 type FileValue struct{
@@ -48,8 +49,8 @@ type AppendFileValue struct{
     FileValue
 }
 
-func (fsf *CreateFileValue) Set(v string) (err error) {
-	fsf.File, err := os.OpenFile(v, os.O_APPEND|os.O_WRONLY|os.O_CREATE, 0666)
+func (fsf *AppendFileValue) Set(v string) (err error) {
+	fsf.File, err = os.OpenFile(v, os.O_APPEND|os.O_WRONLY|os.O_CREATE, 0666)
 	if err != nil {
 		panic(err)
 	}
@@ -71,12 +72,12 @@ func (fsf *DailyFileValue) Set(v string) (err error) {
 		f,err=os.Open(v)
  		if err!=nil{ return}
 	}else{
-		fi,err:=f.Stat()
-		if err!=nil{ return}
+		fi,ferr:=f.Stat()
+		if ferr!=nil{ return}
 		if !fi.IsDir(){return os.ErrNotExist}
 	}
 	y,m,d:=time.Now().Date()
-	fsf.File, err := os.OpenFile(fmt.Sprintf("%s/%4d-%2d-%2d",f.Name(),y,m,d), os.O_APPEND|os.O_WRONLY|os.O_CREATE, 0666)
+	fsf.File, err = os.OpenFile(fmt.Sprintf("%s/%4d-%2d-%2d",f.Name(),y,m,d), os.O_APPEND|os.O_WRONLY|os.O_CREATE, 0666)
 	if err != nil {
 		panic(err)
 	}
