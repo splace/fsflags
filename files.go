@@ -77,7 +77,7 @@ func (fsf *DailyFileValue) Set(v string) (err error) {
 		if !fi.IsDir(){return os.ErrNotExist}
 	}
 	y,m,d:=time.Now().Date()
-	fsf.File, err = os.OpenFile(fmt.Sprintf("%s/%4d-%2d-%2d",f.Name(),y,m,d), os.O_APPEND|os.O_WRONLY|os.O_CREATE, 0666)
+	fsf.File, err = os.OpenFile(fmt.Sprintf("%s/%4d-%02d-%02d",f.Name(),y,m,d), os.O_APPEND|os.O_WRONLY|os.O_CREATE, 0666)
 	if err != nil {
 		panic(err)
 	}
