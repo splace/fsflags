@@ -7,7 +7,7 @@ Installation:
 
      go get github.com/splace/fsflags
 
-Example: accept a folder parameter to write log output to, one file in it for progress and one for errors. errors are appended. folder and files are created if needed. stdout and stderr are used by default.
+Example: get input, output and daily (self-maintaining) log folder from parameters. use stdin and stdout by default.
 ```go
 package main
 
@@ -15,28 +15,45 @@ import "os"
 import "flag"
 import "github.com/splace/fsflags"
 import "log"
-import "path/filepath"
 
-func main(){
-	var logFolder fsflags.NewDirValue   // create or reuse folder, emptying it on startup.
-	flag.Var(&logFolder, "f", "folder for log files.")
+func main() {
+	var read fsflags.FileValue
+	flag.Var(&read, "i", "xml source file.")
+	var write fsflags.NewFileValue
+	flag.Var(&write, "o", "output file (will not overwrite).")
+	var over fsflags.CreateFileValue
+	flag.Var(&over, "oo", "output file (will overwrite).")
+	var daily fsflags.DailyErasingFileValue
+	flag.Var(&daily, "d", "folder for log writes, appending to new file (named "YYYY-MM-DD") each day (self erasing).")
+	var verbose bool
+	flag.BoolVar(&verbose, "v", false, "display log writes.")
 	flag.Parse()
 
-	var progressLog, errorLog *log.Logger
-	if logFolder.File == nil {
-		progressLog=log.New(os.Stdout, "", log.LstdFlags)
-		errorLog=log.New(os.Stderr, "", log.LstdFlags)
-	}else{
-		progressLogFile,err:=os.Create(filepath.Join(logFolder.File.Name(),"progress.log"))
-		if err!=nil{
-			log.Print(err)
-		}
-		progressLog=log.New(progressLogFile, "", log.LstdFlags)
-		errorLogFile,err:=os.OpenFile(filepath.Join(logFolder.File.Name(),"errors.log"), os.O_APPEND|os.O_CREATE|os.O_WRONLY, 0644)
-		if err!=nil{
-			log.Print(err)
-		}
- 		errorLog=log.New(errorLogFile, "", log.LstdFlags)
+	if read.File == nil {
+		read.File = os.Stdin
 	}
+
+	if write.File == nil {
+		if over.File == nil {
+			write.File = os.Stdout
+		}else{
+			write.File = over.File
+		}
+	}
+
+	// make logger that writes as flags indicate.
+	var logger *log.Logger
+	if verbose && daily.File!=nil {
+		logger=log.New(io.MultiWriter(os.Stdout,daily.File),"",log.Ltime)
+	} else {
+		if daily.File!=nil{
+			logger=log.New(daily.File,"",log.Ltime)
+		} else {
+			if verbose{
+				logger=log.New(os.Stdout,"",log.Ltime)
+			}
+		}
+	}
+
 }
 ```

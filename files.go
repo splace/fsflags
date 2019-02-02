@@ -84,8 +84,7 @@ func (fsf *DailyFileValue) Set(v string) (err error) {
 
 // flag value for a file, creates in given dir (also created if needed) new each day, appended too if pre-exists.
 // same file for each invocation, to maintain strict daily log will need re-making after midnight.
-// can erase the oldest file to maintain at least required number of files.
-// if used for logging dont need date, so could use flag:LTime in the log standard package
+// will erase the oldest file to maintain at least required number of files.
 type DailyErasingFileValue struct{
     DailyFileValue
     Required int 
