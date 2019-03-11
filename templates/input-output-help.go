@@ -11,11 +11,13 @@ import	"time"
 
 func main() {
 	var source fsflags.FileValue
-	flag.Var(&source, "i", "source image.(default:<Stdin>)")
+	flag.Var(&source, "i", "input file/device.(default:<Stdin>)")
 	flag.Var(&source, "input", flag.Lookup("i").Usage)
 	var sink fsflags.NewFileValue
-	flag.Var(&sink, "o", "convolution, PNG image.(default:Stdout)")
+	flag.Var(&sink, "o", "output file/device.(default:Stdout)")
 	flag.Var(&sink, "output", flag.Lookup("o").Usage)
+	var over fsflags.CreateFileValue
+	flag.Var(&over, "oo", "output file/device.(silent overwrite, ignored if output set).")
 
 	var help bool
 	flag.BoolVar(&help, "h", false, "display help/usage.")
@@ -38,8 +40,16 @@ func main() {
 	}
 
 	if sink.File == nil {
-		sink.File = os.Stdout
+		if over.File == nil {
+			sink.File = os.Stdout
+		}else{
+			sink.File = over.File
+		}
 	}
+	if source.File == nil {
+		source.File = os.Stdin
+	}
+
 	
 	if logToo.File == nil {
 		logToo.File = os.Stderr
@@ -53,9 +63,6 @@ func main() {
 	}
 	
 	progressLog.Printf("Loading:%q", &source)
-	if sink.File == nil {
-		sink.File = os.Stdout
-	}
 
 	doLog := time.NewTicker(logInterval)
 
