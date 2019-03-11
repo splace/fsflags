@@ -18,7 +18,7 @@ import "log"
 
 func main() {
 	var read fsflags.FileValue
-	flag.Var(&read, "i", "xml source file.")
+	flag.Var(&read, "i", "input file.")
 	var write fsflags.NewFileValue
 	flag.Var(&write, "o", "output file (will not overwrite).")
 	var over fsflags.CreateFileValue
