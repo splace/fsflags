@@ -46,6 +46,7 @@ func main() {
 			sink.File = over.File
 		}
 	}
+	
 	if source.File == nil {
 		source.File = os.Stdin
 	}
@@ -73,7 +74,6 @@ func main() {
 			case t := <-doLog.C:
 				if limit > 0 && t.Sub(startTime) > limit {
 					progressLog.Printf("Timed out:%q", &source)
-					sink.Close()
 					os.Exit(124)
 				}
 				progressLog.Printf("\t@%v",t.Sub(startTime)/time.Second*time.Second)
@@ -82,6 +82,18 @@ func main() {
 	}()
 	
 	// code here
+
+//	var format string
+//	// if available use extension of sink file for format
+//	if ext:=filepath.Ext(sink.Name());ext!=""{
+//		format=ext[1:]
+//	}
+
+//		if ext:=filepath.Ext(sink.Name());ext!="" && ext!=".png"{
+//			os.Rename(sink.Name(),sink.Name()+".png")
+//		}
+
+
 	
 	progressLog.Printf("Saving:%q", &sink)
 
