@@ -1,5 +1,4 @@
-// fsflags provides several implemetations of flag.Flag that simplify command line handling of file system objects (files/folders.)
-
+// Package fsflags provides several implemetations of flag.Flag that simplify command line handling of file system objects (files/folders.)
 package fsflags
 
 import "os"
